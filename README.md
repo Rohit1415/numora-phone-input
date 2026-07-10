@@ -190,23 +190,52 @@ Execute the Vitest suite (asserting rendering, user typing, keyboard navigation,
 bun run test
 ```
 
-### Run Storybook
-
-Launch the local Storybook documentation page:
+Generate test coverage reports:
 
 ```bash
-bun run storybook
+bun run test:coverage
 ```
 
-See stories in [src/components/PhoneInput.stories.tsx](file:///home/admin/Desktop/apps/phone-input/src/components/PhoneInput.stories.tsx).
+### Code Formatting & Linting
 
-### CI/CD & NPM Publishing
+Format the codebase with Prettier:
 
-A single GitHub Actions workflow is configured in **[publish.yml](file:///home/admin/Desktop/apps/phone-input/.github/workflows/publish.yml)** to manage the entire release pipeline with separate chained jobs:
+```bash
+bun run format
+```
 
-1.  **`lint`**: Validates code syntax via ESLint and runs TypeScript type checking.
-2.  **`test`** (needs `lint`): Runs all unit tests with Vitest.
-3.  **`build`** (needs `test`): Compiles package bundles and Storybook docs.
-4.  **`publish`** (needs `build`): Publishes the library to npm on pushes to `main` or `master` branches using the `NPM_TOKEN` secret.
+Check code formatting and syntax linting:
 
-// test
+```bash
+bun run format:check
+bun run lint
+```
+
+### Git Hooks (Husky)
+
+Husky git hooks are configured to automate validation check runs before committing and pushing:
+
+- **Pre-commit**: Runs formatting checks, linting, and testing (`bun run format:check && bun run lint && bun run test`).
+- **Pre-push**: Runs all pre-commit checks plus compiling the production bundle (`bun run build`) to ensure the codebase compiles successfully before push.
+
+### Versioning & Changelogs (Changesets)
+
+This project uses **Changesets** to automate version bumping, changelog generation, and NPM releases without encountering git conflicts in multi-contributor environments.
+
+To add a changeset for your contribution:
+
+1. Run the changeset command:
+   ```bash
+   bun changeset
+   ```
+2. Follow the prompt to choose the appropriate semver bump type (patch, minor, or major) and describe your change.
+3. Commit the generated `.changeset/*.md` markdown file along with your changes.
+
+### CI/CD Workflows
+
+The automated release pipeline is managed via GitHub Actions:
+
+- **[code-quality.yml](file:///Users/rohitbhatu/Desktop/projects/numora/.github/workflows/code-quality.yml)**: Validates code format, linting, and TypeScript types on push and pull requests.
+- **[test.yml](file:///Users/rohitbhatu/Desktop/projects/numora/.github/workflows/test.yml)**: Runs unit tests and uploads coverage reports.
+- **[pr-checks.yml](file:///Users/rohitbhatu/Desktop/projects/numora/.github/workflows/pr-checks.yml)**: Automatically runs linting, type-checking, tests, and builds on any pull request targeting main branches.
+- **[publish.yml](file:///Users/rohitbhatu/Desktop/projects/numora/.github/workflows/publish.yml)**: Integrates Changesets to automate package publication. Upon pushing changesets to the default branch, it opens/updates a "Version Packages" PR. When that PR is merged, it publishes the package to NPM and publishes a GitHub Release.
