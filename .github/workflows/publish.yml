@@ -2,21 +2,33 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  BUN_VERSION: latest
 
 jobs:
   lint:
+    name: Lint & Type Check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Install Dependencies
         run: bun install --frozen-lockfile
@@ -28,15 +40,17 @@ jobs:
         run: bun run lint
 
   test:
+    name: Test
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Install Dependencies
         run: bun install --frozen-lockfile
@@ -45,15 +59,18 @@ jobs:
         run: bun run test
 
   build:
+    name: Build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [lint, test]
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Install Dependencies
         run: bun install --frozen-lockfile
@@ -64,29 +81,55 @@ jobs:
       - name: Build Storybook
         run: bun run build-storybook
 
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+
   publish:
+    name: Publish to npm
     runs-on: ubuntu-latest
-    needs: [lint, test, build]
+    timeout-minutes: 10
+    needs: [build]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    environment: npm-publish
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: Run Build
-        run: bun run build
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: dist
+          path: dist
 
-      - name: Configure NPM Auth
+      - name: Check if Version Already Published
+        id: version_check
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+          PKG_NAME=$(node -p "require('./package.json').name")
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if npm view "$PKG_NAME@$PKG_VERSION" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "⚠️  $PKG_NAME@$PKG_VERSION is already on the registry — skipping publish."
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Publish to npm
-        run: bun publish --access public
+        if: steps.version_check.outputs.published == 'false'
+        run: bun publish --access public --provenance
+        env:
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
