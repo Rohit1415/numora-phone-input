@@ -29,7 +29,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -47,7 +46,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: test
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -68,7 +66,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [lint, test, build]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     steps:
       - name: Checkout Code
@@ -85,10 +83,13 @@ jobs:
       - name: Run Build
         run: bun run build
 
-      - name: Configure NPM Auth
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Publish to npm
-        run: npm publish --access public --registry https://registry.npmjs.org/
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
