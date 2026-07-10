@@ -1,5 +1,5 @@
 {
-  "name": "numora",
+  "name": "numora-phone-input",
   "version": "1.0.0",
   "description": "An extremely lightweight, accessible, and production-ready React phone input component.",
   "main": "./dist/index.js",

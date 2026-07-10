@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { PhoneInput } from "numora";
-import "numora/style.css";
+import { PhoneInput } from "numora-phone-input";
+import "numora-phone-input/style.css";
 
 export default function Page() {
   const [phone, setPhone] = useState("");

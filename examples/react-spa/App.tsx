@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import { PhoneInput, PhoneInputRef } from "numora";
-import "numora/style.css";
+import { PhoneInput, PhoneInputRef } from "numora-phone-input";
+import "numora-phone-input/style.css";
 
 export default function App() {
   const phoneRef = useRef<PhoneInputRef>(null);

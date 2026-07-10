@@ -20,21 +20,21 @@ An extremely lightweight, production-ready, and fully accessible (WCAG 2.2 AA co
 
 Install using Bun (preferred for the project workspace):
 ```bash
-bun add numora
+bun add numora-phone-input
 ```
 
 Or using another package manager:
 ```bash
-npm install numora
+npm install numora-phone-input
 # or
-pnpm add numora
+pnpm add numora-phone-input
 # or
-yarn add numora
+yarn add numora-phone-input
 ```
 
 Ensure you import the CSS stylesheet in your app entrypoint:
 ```javascript
-import "numora/style.css";
+import "numora-phone-input/style.css";
 ```
 
 ---
@@ -45,8 +45,8 @@ import "numora/style.css";
 
 ```tsx
 import React, { useState } from "react";
-import { PhoneInput } from "numora";
-import "numora/style.css";
+import { PhoneInput } from "numora-phone-input";
+import "numora-phone-input/style.css";
 
 export default function App() {
   const [value, setValue] = useState(""); // E.164 output state (e.g. "+919876543210")
@@ -73,8 +73,8 @@ The component exposes public methods via `forwardRef`. See [src/components/Phone
 
 ```tsx
 import React, { useRef } from "react";
-import { PhoneInput, PhoneInputRef } from "numora";
-import "numora/style.css";
+import { PhoneInput, PhoneInputRef } from "numora-phone-input";
+import "numora-phone-input/style.css";
 
 export default function App() {
   const phoneRef = useRef<PhoneInputRef>(null);
@@ -145,7 +145,7 @@ Override the namespaced variables in your local stylesheet to match your app the
 If you want to construct a completely customized UI, you can import and use the state-management hook directly:
 
 ```typescript
-import { usePhoneInput } from "numora";
+import { usePhoneInput } from "numora-phone-input";
 
 const {
   selectedCountry,
