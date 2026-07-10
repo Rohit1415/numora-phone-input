@@ -1,290 +1,302 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PhoneInput Component Demo</title>
-  <!-- Import compiled styles -->
-  <link rel="stylesheet" href="./dist/style.css">
-  <style>
-    :root {
-      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      --card-bg: rgba(255, 255, 255, 0.85);
-      --card-border: 1px solid rgba(226, 232, 240, 0.8);
-      --primary: #0f172a;
-      --primary-hover: #1e293b;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-
-    * {
-      box-sizing: border-box;
-      font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg-gradient);
-      color: #0f172a;
-      margin: 0;
-      padding: 2rem 1rem;
-    }
-
-    .demo-container {
-      width: 100%;
-      max-width: 500px;
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: var(--card-border);
-      border-radius: 16px;
-      padding: 2.5rem 2rem;
-      box-shadow: var(--shadow-lg);
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin: 0 0 0.5rem 0;
-    }
-
-    p.subtitle {
-      font-size: 0.95rem;
-      color: #64748b;
-      margin: 0;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #475569;
-      margin-bottom: 0.5rem;
-    }
-
-    /* Target container for our phone input */
-    #phone-container {
-      width: 100%;
-    }
-
-    .control-panel {
-      background: rgba(241, 245, 249, 0.6);
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 1.25rem;
-      margin-top: 2rem;
-    }
-
-    .control-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #334155;
-      margin: 0 0 0.75rem 0;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .btn-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    button.api-btn {
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      cursor: pointer;
-      color: #334155;
-      transition: all 0.2s;
-    }
-
-    button.api-btn:hover {
-      background: #f8fafc;
-      border-color: #94a3b8;
-      color: #0f172a;
-    }
-
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #334155;
-    }
-
-    .checkbox-group input {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
-
-    .value-dashboard {
-      margin-top: 1.5rem;
-      border-top: 1px solid #e2e8f0;
-      padding-top: 1.5rem;
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.5rem 1rem;
-      font-size: 0.85rem;
-    }
-
-    .dash-label {
-      font-weight: 600;
-      color: #64748b;
-    }
-
-    .dash-val {
-      font-family: monospace;
-      color: #0f172a;
-      word-break: break-all;
-    }
-
-    footer {
-      margin-top: 2rem;
-      font-size: 0.8rem;
-      color: #94a3b8;
-      text-align: center;
-    }
-
-    footer a {
-      color: #64748b;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="demo-container">
-    <header>
-      <h1>PhoneInput Library</h1>
-      <p class="subtitle">Framework-agnostic, lightweight & WCAG compliant</p>
-    </header>
-
-    <div class="form-group">
-      <label for="phone-input">Phone Number</label>
-      <div id="phone-container"></div>
-    </div>
-
-    <div class="value-dashboard">
-      <h3 class="control-title">Data Output</h3>
-      <div class="dashboard-grid">
-        <span class="dash-label">Combined (E.164):</span>
-        <span class="dash-val" id="val-combined">--</span>
-
-        <span class="dash-label">Input Value:</span>
-        <span class="dash-val" id="val-input">--</span>
-
-        <span class="dash-label">Dial Code:</span>
-        <span class="dash-val" id="val-code">--</span>
-
-        <span class="dash-label">Country:</span>
-        <span class="dash-val" id="val-country">--</span>
-      </div>
-    </div>
-
-    <div class="control-panel">
-      <h3 class="control-title">Interactive APIs</h3>
-      <div class="btn-grid">
-        <button class="api-btn" id="btn-set-uk">Set +44 7911 123456</button>
-        <button class="api-btn" id="btn-set-india">Set +91 98765 43210</button>
-        <button class="api-btn" id="btn-set-us">Select US (us)</button>
-        <button class="api-btn" id="btn-set-germany">Select Germany (de)</button>
-      </div>
-      <div class="checkbox-group">
-        <input type="checkbox" id="chk-disabled">
-        <label for="chk-disabled" style="margin: 0; text-transform: none; font-size: inherit; font-weight: inherit; letter-spacing: inherit;">Disable input component</label>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    Standalone Phone Input Library Demo &bull; MIT License
-  </footer>
-
-  <!-- Import the compiled ESM bundle -->
-  <script type="module">
-    import { PhoneInput } from "./dist/index.mjs";
-
-    const container = document.getElementById("phone-container");
-    const valCombined = document.getElementById("val-combined");
-    const valInput = document.getElementById("val-input");
-    const valCode = document.getElementById("val-code");
-    const valCountry = document.getElementById("val-country");
-
-    // Helper to refresh the state display
-    function updateOutputs(instance) {
-      valCombined.textContent = instance.getValue() || "(empty)";
-      valInput.textContent = instance.getInputValue() || "(empty)";
-      valCode.textContent = instance.getDialCode();
-      const country = instance.getSelectedCountry();
-      valCountry.textContent = `${country.name} (${country.iso2.toUpperCase()})`;
-    }
-
-    // Initialize PhoneInput instance
-    const pi = new PhoneInput(container, {
-      defaultCountry: "in",
-      placeholder: "Enter mobile number",
-      onInputChange: (val, combined) => {
-        updateOutputs(pi);
-      },
-      onCountryChange: (country) => {
-        updateOutputs(pi);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhoneInput Component Demo</title>
+    <!-- Import compiled styles -->
+    <link rel="stylesheet" href="./dist/style.css" />
+    <style>
+      :root {
+        --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        --card-bg: rgba(255, 255, 255, 0.85);
+        --card-border: 1px solid rgba(226, 232, 240, 0.8);
+        --primary: #0f172a;
+        --primary-hover: #1e293b;
+        --accent: #3b82f6;
+        --accent-hover: #2563eb;
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
       }
-    });
 
-    // Run initial display update
-    updateOutputs(pi);
+      * {
+        box-sizing: border-box;
+        font-family:
+          "Outfit",
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
 
-    // Set up interactive controls triggers
-    document.getElementById("btn-set-uk").onclick = () => {
-      pi.setValue("+44 7911 123456");
-    };
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-gradient);
+        color: #0f172a;
+        margin: 0;
+        padding: 2rem 1rem;
+      }
 
-    document.getElementById("btn-set-india").onclick = () => {
-      pi.setValue("+91 98765 43210");
-    };
+      .demo-container {
+        width: 100%;
+        max-width: 500px;
+        background: var(--card-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: var(--card-border);
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        box-shadow: var(--shadow-lg);
+      }
 
-    document.getElementById("btn-set-us").onclick = () => {
-      pi.setCountry("us");
-    };
+      header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
 
-    document.getElementById("btn-set-germany").onclick = () => {
-      pi.setCountry("de");
-    };
+      h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0 0 0.5rem 0;
+      }
 
-    document.getElementById("chk-disabled").onchange = (e) => {
-      pi.setDisabled(e.target.checked);
-    };
-  </script>
-</body>
+      p.subtitle {
+        font-size: 0.95rem;
+        color: #64748b;
+        margin: 0;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #475569;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Target container for our phone input */
+      #phone-container {
+        width: 100%;
+      }
+
+      .control-panel {
+        background: rgba(241, 245, 249, 0.6);
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 1.25rem;
+        margin-top: 2rem;
+      }
+
+      .control-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #334155;
+        margin: 0 0 0.75rem 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .btn-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      button.api-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #334155;
+        transition: all 0.2s;
+      }
+
+      button.api-btn:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+        color: #0f172a;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #334155;
+      }
+
+      .checkbox-group input {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+
+      .value-dashboard {
+        margin-top: 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 1.5rem;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.5rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      .dash-label {
+        font-weight: 600;
+        color: #64748b;
+      }
+
+      .dash-val {
+        font-family: monospace;
+        color: #0f172a;
+        word-break: break-all;
+      }
+
+      footer {
+        margin-top: 2rem;
+        font-size: 0.8rem;
+        color: #94a3b8;
+        text-align: center;
+      }
+
+      footer a {
+        color: #64748b;
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-container">
+      <header>
+        <h1>PhoneInput Library</h1>
+        <p class="subtitle">Framework-agnostic, lightweight & WCAG compliant</p>
+      </header>
+
+      <div class="form-group">
+        <label for="phone-input">Phone Number</label>
+        <div id="phone-container"></div>
+      </div>
+
+      <div class="value-dashboard">
+        <h3 class="control-title">Data Output</h3>
+        <div class="dashboard-grid">
+          <span class="dash-label">Combined (E.164):</span>
+          <span class="dash-val" id="val-combined">--</span>
+
+          <span class="dash-label">Input Value:</span>
+          <span class="dash-val" id="val-input">--</span>
+
+          <span class="dash-label">Dial Code:</span>
+          <span class="dash-val" id="val-code">--</span>
+
+          <span class="dash-label">Country:</span>
+          <span class="dash-val" id="val-country">--</span>
+        </div>
+      </div>
+
+      <div class="control-panel">
+        <h3 class="control-title">Interactive APIs</h3>
+        <div class="btn-grid">
+          <button class="api-btn" id="btn-set-uk">Set +44 7911 123456</button>
+          <button class="api-btn" id="btn-set-india">Set +91 98765 43210</button>
+          <button class="api-btn" id="btn-set-us">Select US (us)</button>
+          <button class="api-btn" id="btn-set-germany">Select Germany (de)</button>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="chk-disabled" />
+          <label
+            for="chk-disabled"
+            style="
+              margin: 0;
+              text-transform: none;
+              font-size: inherit;
+              font-weight: inherit;
+              letter-spacing: inherit;
+            "
+            >Disable input component</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <footer>Standalone Phone Input Library Demo &bull; MIT License</footer>
+
+    <!-- Import the compiled ESM bundle -->
+    <script type="module">
+      import { PhoneInput } from "./dist/index.mjs";
+
+      const container = document.getElementById("phone-container");
+      const valCombined = document.getElementById("val-combined");
+      const valInput = document.getElementById("val-input");
+      const valCode = document.getElementById("val-code");
+      const valCountry = document.getElementById("val-country");
+
+      // Helper to refresh the state display
+      function updateOutputs(instance) {
+        valCombined.textContent = instance.getValue() || "(empty)";
+        valInput.textContent = instance.getInputValue() || "(empty)";
+        valCode.textContent = instance.getDialCode();
+        const country = instance.getSelectedCountry();
+        valCountry.textContent = `${country.name} (${country.iso2.toUpperCase()})`;
+      }
+
+      // Initialize PhoneInput instance
+      const pi = new PhoneInput(container, {
+        defaultCountry: "in",
+        placeholder: "Enter mobile number",
+        onInputChange: (val, combined) => {
+          updateOutputs(pi);
+        },
+        onCountryChange: (country) => {
+          updateOutputs(pi);
+        }
+      });
+
+      // Run initial display update
+      updateOutputs(pi);
+
+      // Set up interactive controls triggers
+      document.getElementById("btn-set-uk").onclick = () => {
+        pi.setValue("+44 7911 123456");
+      };
+
+      document.getElementById("btn-set-india").onclick = () => {
+        pi.setValue("+91 98765 43210");
+      };
+
+      document.getElementById("btn-set-us").onclick = () => {
+        pi.setCountry("us");
+      };
+
+      document.getElementById("btn-set-germany").onclick = () => {
+        pi.setCountry("de");
+      };
+
+      document.getElementById("chk-disabled").onchange = (e) => {
+        pi.setDisabled(e.target.checked);
+      };
+    </script>
+  </body>
 </html>
