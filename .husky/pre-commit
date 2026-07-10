@@ -1,2 +1,38 @@
 #!/bin/sh
-bun run format:check && bun run lint && bun run test
+
+# Colors
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+BOLD='\033[1m'
+
+echo "${BOLD}🦋 Running Git Pre-Commit Hooks...${NC}\n"
+
+run_stage() {
+  STAGE_NAME=$1
+  COMMAND=$2
+
+  printf "  ${CYAN}⏳${NC}  %-40s" "$STAGE_NAME..."
+
+  # Run command and capture output
+  OUTPUT=$(eval "$COMMAND" 2>&1)
+  STATUS=$?
+
+  if [ $STATUS -eq 0 ]; then
+    # Move cursor back and print SUCCESS
+    printf "\r  ${GREEN}✓${NC}  %-40s [${GREEN}PASS${NC}]\n" "$STAGE_NAME"
+  else
+    printf "\r  ${RED}✗${NC}  %-40s [${RED}FAIL${NC}]\n\n" "$STAGE_NAME"
+    echo "${RED}${BOLD}Error Detail:${NC}"
+    echo "$OUTPUT"
+    echo "\n${RED}🛑 Commit aborted. Please fix the issues above and try again.${NC}"
+    exit 1
+  fi
+}
+
+run_stage "Checking code formatting" "bun run format:check"
+run_stage "Running syntax linting" "bun run lint"
+run_stage "Executing unit test suite" "bun run test"
+
+echo "\n${GREEN}${BOLD}✨ All checks passed! Proceeding with commit...${NC}"
