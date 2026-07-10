@@ -89,14 +89,15 @@ jobs:
           retention-days: 1
 
   publish:
-    name: Publish to npm
+    name: Publish to npm or Create Version PR
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: [build]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     environment: npm-publish
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
       id-token: write
     steps:
       - name: Checkout Code
@@ -110,26 +111,11 @@ jobs:
       - name: Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v5
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
         with:
-          name: dist
-          path: dist
-
-      - name: Check if Version Already Published
-        id: version_check
-        run: |
-          PKG_NAME=$(node -p "require('./package.json').name")
-          PKG_VERSION=$(node -p "require('./package.json').version")
-          if npm view "$PKG_NAME@$PKG_VERSION" version >/dev/null 2>&1; then
-            echo "published=true" >> "$GITHUB_OUTPUT"
-            echo "⚠️  $PKG_NAME@$PKG_VERSION is already on the registry — skipping publish."
-          else
-            echo "published=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Publish to npm
-        if: steps.version_check.outputs.published == 'false'
-        run: bun publish --access public --provenance
+          publish: bun run release
         env:
-          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -23,9 +23,9 @@ export default function App() {
       />
       <div style={{ marginTop: 10 }}>
         <button type="submit">Submit</button>
-        <button 
-          type="button" 
-          onClick={() => phoneRef.current?.setValue("+447911123456")} 
+        <button
+          type="button"
+          onClick={() => phoneRef.current?.setValue("+447911123456")}
           style={{ marginLeft: 10 }}
         >
           Set UK Number

@@ -1,0 +1,14 @@
+language: en
+reviews:
+  profile: chill # or "assertive" for stricter reviews
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false # disables the fun poem comment if you don't want it
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!dist/**"
+    - "!**/*.lock"
+    - "!storybook-static/**"
+tone_instructions: "Be concise. Focus on bugs, type safety, and accessibility for a React component library."

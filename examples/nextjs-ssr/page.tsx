@@ -10,8 +10,11 @@ export default function Page() {
   return (
     <main style={{ padding: "2rem", maxWidth: "600px", margin: "0 auto" }}>
       <h1>Next.js Hydration-Safe Example</h1>
-      <p>This component uses React 18's useId to ensure server-side rendering and hydration safety on Next.js.</p>
-      
+      <p>
+        This component uses React 18's useId to ensure server-side rendering and hydration safety on
+        Next.js.
+      </p>
+
       <div style={{ marginTop: "2rem" }}>
         <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold" }}>
           Mobile Number

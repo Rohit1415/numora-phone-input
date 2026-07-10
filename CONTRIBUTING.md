@@ -15,12 +15,16 @@ By participating in this project, you agree to maintain a professional, welcomin
 ## Development Setup
 
 ### 1. Requirements
+
 Ensure you have the following tools installed locally:
+
 - Node.js (v18+)
 - Bun (preferred package manager)
 
 ### 2. Getting Started
+
 Clone the repository and install the development dependencies:
+
 ```bash
 git clone https://github.com/rohit-ywppl/numora.git
 cd numora
@@ -28,7 +32,9 @@ bun install
 ```
 
 ### 3. Available Scripts
+
 Use the following commands during development:
+
 - **Build**: Compiles ESM/CJS bundles.
   ```bash
   bun run build
@@ -69,6 +75,7 @@ We follow the **Conventional Commits** specification. Commit messages must be st
 ```
 
 ### Allowed Types:
+
 - `feat`: A new user-facing feature.
 - `fix`: A bug fix.
 - `docs`: Documentation changes only.
@@ -78,6 +85,7 @@ We follow the **Conventional Commits** specification. Commit messages must be st
 - `chore`: Updates to build processes, tools, or dependencies.
 
 ### Examples:
+
 - `feat(ui): add optional flag URL overrides`
 - `fix(a11y): correct keyboard focus trap in dropdown list`
 - `docs(readme): add troubleshooting steps for Next.js app router`

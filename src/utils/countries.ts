@@ -197,7 +197,7 @@ export const rawCountries: [string, string, string][] = [
   ["Zimbabwe", "zw", "263"]
 ];
 
-export const countries: Country[] = rawCountries.map(c => ({
+export const countries: Country[] = rawCountries.map((c) => ({
   name: c[0],
   iso2: c[1],
   dialCode: c[2]

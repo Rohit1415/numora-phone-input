@@ -31,14 +31,18 @@ export const Disabled: Story = {
 
 export const CustomTheme: Story = {
   render: () => (
-    <div style={{
-      "--pi-border-color": "#a8a29e",
-      "--pi-border-color-focus": "#ea580c",
-      "--pi-bg": "#fafaf9",
-      "--pi-text-main": "#44403c",
-      "--pi-border-radius": "12px",
-      "--pi-height": "48px"
-    } as React.CSSProperties}>
+    <div
+      style={
+        {
+          "--pi-border-color": "#a8a29e",
+          "--pi-border-color-focus": "#ea580c",
+          "--pi-bg": "#fafaf9",
+          "--pi-text-main": "#44403c",
+          "--pi-border-radius": "12px",
+          "--pi-height": "48px"
+        } as React.CSSProperties
+      }
+    >
       <PhoneInput defaultCountry="de" placeholder="Custom theme input" />
     </div>
   )

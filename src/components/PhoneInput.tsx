@@ -145,7 +145,9 @@ export const PhoneInput = forwardRef<PhoneInputRef, PhoneInputProps>((props, ref
       case "Escape": {
         e.preventDefault();
         closeDropdown();
-        const selectorButton = wrapperRef.current?.querySelector(".pi-selector") as HTMLButtonElement;
+        const selectorButton = wrapperRef.current?.querySelector(
+          ".pi-selector"
+        ) as HTMLButtonElement;
         selectorButton?.focus();
         break;
       }
